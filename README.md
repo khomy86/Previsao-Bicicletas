@@ -216,3 +216,9 @@ Este projeto foi criado para fins educacionais e de investigação.
 ## 🤝 Contribuições
 
 Este projeto foi desenvolvido como parte de uma análise de ciência de dados. Sinta-se à vontade para fazer um fork e adaptá-lo às suas próprias necessidades de análise de partilha de bicicletas. 
+
+Realizado por:
+
+Ivanilson Braga – 30010789
+Zakhar Khomyakivskyy – 30011355 
+Ektiandro Elizabeth – 30011479
