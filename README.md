@@ -6,6 +6,8 @@ cleaning, SQL, exploratory analysis, modeling with tidymodels, and a Shiny
 dashboard that applies the best model to the 5-day weather forecast of several
 cities.
 
+![Forecast tab](docs/screenshots/forecast.png)
+
 ## Data
 
 - **Seoul Bike Sharing Demand** ([UCI](https://archive.ics.uci.edu/dataset/560/seoul+bike+sharing+demand)):
@@ -82,6 +84,12 @@ Rscript launch_dashboard.R  # serves on http://127.0.0.1:3838
 - **Weather**: temperature vs. rentals, filterable by season and temperature.
 - **Hourly patterns**: average rentals by hour of day for each season.
 - **Models**: performance comparison and variable importance.
+
+| Seoul in 2018 | Hourly patterns |
+|---|---|
+| ![Seoul in 2018](docs/screenshots/overview.png) | ![Hourly patterns](docs/screenshots/hourly.png) |
+| **Weather** | **Models** |
+| ![Weather](docs/screenshots/weather.png) | ![Models](docs/screenshots/models.png) |
 
 Predictions for other cities assume a fleet and riding habits similar to
 Seoul's. They're useful for comparing cities, not as absolute numbers.

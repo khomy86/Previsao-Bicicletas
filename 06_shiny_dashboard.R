@@ -215,20 +215,20 @@ server <- function(input, output, session) {
       arrange(desc(PREDICTED))
 
     output$map <- renderLeaflet({
-      pal <- colorNumeric("YlOrRd", peaks$PREDICTED)
+      pal <- colorBin("YlOrRd", peaks$PREDICTED, bins = 4, pretty = TRUE)
       leaflet(peaks) |>
-        addProviderTiles(providers$CartoDB.Positron) |>
+        addTiles() |>
         addCircleMarkers(
-          lng = ~LON, lat = ~LAT, layerId = ~CITY,
-          radius = ~sqrt(PREDICTED) / 2,
-          color = ~pal(PREDICTED), fillOpacity = 0.8, stroke = FALSE,
+          lng = ~LON, lat = ~LAT, layerId = ~CITY, radius = 9,
+          fillColor = ~pal(PREDICTED), fillOpacity = 0.9,
+          color = "#333333", weight = 1,
           label = ~paste0(CITY, ": ", fmt(PREDICTED), " bikes/hour"),
           popup = ~paste0("<b>", CITY, "</b><br>",
                           "Peak: ", fmt(PREDICTED), " bikes/hour<br>",
                           format(LOCAL_TIME, "%b %d, %H:%M"), " (local time)")
         ) |>
         addLegend("bottomright", pal = pal, values = ~PREDICTED,
-                  title = "Bikes/hour")
+                  title = "Peak bikes/hour")
     })
 
     observeEvent(input$map_marker_click, {
@@ -284,7 +284,8 @@ server <- function(input, output, session) {
 
   weather_data <- reactive({
     bikes |>
-      filter(SEASON %in% input$weather_seasons,
+      filter(FUNCTIONING_DAY == "Yes",
+             SEASON %in% input$weather_seasons,
              between(TEMPERATURE_C, input$temp_range[1], input$temp_range[2]))
   })
 
@@ -324,20 +325,20 @@ server <- function(input, output, session) {
 
   output$seasonal_plot <- renderPlotly({
     p <- ggplot(seasonal, aes(SEASON, avg_rentals, fill = SEASON)) +
-      geom_col(show.legend = FALSE) +
+      geom_col() +
       scale_fill_manual(values = season_colours) +
       labs(x = NULL, y = "Rentals per hour") +
       theme_minimal()
-    as_plotly(p)
+    as_plotly(p) |> hide_legend()
   })
 
   output$model_plot <- renderPlotly({
     p <- ggplot(model_results, aes(rmse, reorder(model, -rmse))) +
-      geom_col(aes(fill = model == best$model), show.legend = FALSE) +
+      geom_col(aes(fill = model == best$model)) +
       scale_fill_manual(values = c("grey70", "#3c8dbc")) +
       labs(x = "RMSE", y = NULL) +
       theme_minimal()
-    as_plotly(p)
+    as_plotly(p) |> hide_legend()
   })
 
   output$importance_plot <- renderPlotly({
@@ -349,7 +350,8 @@ server <- function(input, output, session) {
   })
 
   output$model_table <- renderDT({
-    compact_table(model_results, colnames = c("Model", "RMSE", "R²", "MAE"))
+    compact_table(model_results, colnames = c("Model", "RMSE", "R²", "MAE")) |>
+      formatRound(c("rmse", "mae"), digits = 1)
   })
 }
 
